@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
@@ -21,7 +22,7 @@ public class NaiveBayesian {
     public static void main(String[] args) {  
         NaiveBayesian bayesian = new NaiveBayesian();  
         double d = 0;  
-        for (int i = 0; i < 50; i++) {  
+        for (int i = 0; i < 1; i++) {  
             d +=bayesian.startNB();  
         }  
         System.out.println("total error rate is: " + d / 50);  
@@ -41,12 +42,14 @@ public class NaiveBayesian {
             dataSet.remove(n);  
         }  
         
+        //根据测试集文本建立一个词汇表，把重复的词汇剔除
         Set<String> vocabSet = createVocabList(dataSet);  
         //训练样本  
         trainNB(vocabSet, dataSet);  
           
         int errorCount = 0;  
         for (Email email : testSet) {  
+        	System.out.println("预测分类:"+classifyNB(setOfWords2Vec(vocabSet, email)) +"--> 真实分类:" +email.getFlag());
             if (classifyNB(setOfWords2Vec(vocabSet, email)) != email.getFlag()) {  
                 ++errorCount;  
             }  
@@ -207,7 +210,7 @@ public class NaiveBayesian {
         int numTrainDocs = dataSet.size();  
         // 训练集中垃圾邮件的概率  
         pSpamRatio = (double) calSpamNum(dataSet) / numTrainDocs;  
-        System.out.println("total emails:"+numTrainDocs+" spam emails:"+calSpamNum(dataSet));
+        //System.out.println("total emails:"+numTrainDocs+" spam emails:"+calSpamNum(dataSet));
         // 记录每个类别下每个词的出现次数  
         List<Integer> p0Num = new ArrayList<Integer>();  
         List<Integer> p1Num = new ArrayList<Integer>();  
